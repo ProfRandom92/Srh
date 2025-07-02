@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Srh - Intelligentes Such-Tool</title>
+    <meta name="description" content="Srh ist ein intelligentes Such-Tool für verschiedene Datenquellen - lokale Daten, Dateien und Web-Inhalte.">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="styles.css" as="style">
+    <link rel="preload" href="app.js" as="script">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Srh - Intelligentes Such-Tool">
+    <meta property="og:description" content="Durchsuchen Sie lokale Daten, Dateien und Web-Inhalte mit unserem intelligenten Such-Tool.">
+    <meta property="og:type" content="website">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#2563eb">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Srh wird geladen...</p>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app" class="app" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <span class="logo-icon">🔍</span>
+                        <h1 class="logo-text">Srh</h1>
+                    </div>
+                    <nav class="nav">
+                        <button class="nav-button" data-tab="search" aria-label="Suche">
+                            <span>🔍</span> Suche
+                        </button>
+                        <button class="nav-button" data-tab="data" aria-label="Daten">
+                            <span>📊</span> Daten
+                        </button>
+                        <button class="nav-button" data-tab="stats" aria-label="Statistiken">
+                            <span>📈</span> Stats
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                <!-- Search Tab -->
+                <section id="tab-search" class="tab-content active">
+                    <div class="search-section">
+                        <div class="search-header">
+                            <h2>Intelligente Suche</h2>
+                            <p>Durchsuchen Sie lokale Daten, Dateien und Web-Inhalte</p>
+                        </div>
+
+                        <!-- Search Form -->
+                        <form class="search-form" id="search-form">
+                            <div class="search-input-container">
+                                <input 
+                                    type="text" 
+                                    id="search-input" 
+                                    class="search-input" 
+                                    placeholder="Was möchten Sie suchen?"
+                                    autocomplete="off"
+                                    required
+                                >
+                                <button type="submit" class="search-button" aria-label="Suchen">
+                                    <span class="search-icon">🔍</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Search Options -->
+                            <div class="search-options">
+                                <div class="search-option-group">
+                                    <label>Suchtyp:</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="searchType" value="local" checked>
+                                            <span>📊 Lokal</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="searchType" value="files">
+                                            <span>📁 Dateien</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="searchType" value="web">
+                                            <span>🌐 Web</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="searchType" value="advanced">
+                                            <span>⚡ Erweitert</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="search-option-group">
+                                    <label for="category-filter">Kategorie:</label>
+                                    <select id="category-filter" class="select-input">
+                                        <option value="">Alle Kategorien</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Search Suggestions -->
+                        <div id="search-suggestions" class="search-suggestions" style="display: none;">
+                            <div class="suggestions-list"></div>
+                        </div>
+
+                        <!-- Search Results -->
+                        <div id="search-results" class="search-results" style="display: none;">
+                            <div class="results-header">
+                                <h3 id="results-title">Suchergebnisse</h3>
+                                <div class="results-info">
+                                    <span id="results-count">0 Ergebnisse</span>
+                                    <span id="search-time"></span>
+                                </div>
+                            </div>
+                            <div id="results-list" class="results-list"></div>
+                            <div id="results-pagination" class="pagination" style="display: none;"></div>
+                        </div>
+
+                        <!-- No Results -->
+                        <div id="no-results" class="no-results" style="display: none;">
+                            <div class="no-results-icon">🤷‍♂️</div>
+                            <h3>Keine Ergebnisse gefunden</h3>
+                            <p>Versuchen Sie andere Suchbegriffe oder passen Sie die Filter an.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data Management Tab -->
+                <section id="tab-data" class="tab-content">
+                    <div class="data-section">
+                        <div class="section-header">
+                            <h2>Datenmanagement</h2>
+                            <div class="section-actions">
+                                <button class="btn btn-secondary" id="import-btn">📥 Import</button>
+                                <button class="btn btn-secondary" id="export-btn">📤 Export</button>
+                                <button class="btn btn-primary" id="add-data-btn">➕ Hinzufügen</button>
+                            </div>
+                        </div>
+
+                        <!-- Data Form -->
+                        <div id="data-form" class="data-form" style="display: none;">
+                            <h3 id="form-title">Neue Daten hinzufügen</h3>
+                            <form id="data-input-form">
+                                <div class="form-group">
+                                    <label for="data-title">Titel *</label>
+                                    <input type="text" id="data-title" class="form-input" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="data-content">Inhalt *</label>
+                                    <textarea id="data-content" class="form-textarea" rows="6" required></textarea>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="data-category">Kategorie</label>
+                                        <input type="text" id="data-category" class="form-input" placeholder="z.B. tutorial, dokumentation">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="data-tags">Tags (durch Komma getrennt)</label>
+                                        <input type="text" id="data-tags" class="form-input" placeholder="tag1, tag2, tag3">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-secondary" id="cancel-form-btn">Abbrechen</button>
+                                    <button type="submit" class="btn btn-primary">Speichern</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Data List -->
+                        <div class="data-list">
+                            <div class="data-filters">
+                                <input type="text" id="data-search" class="search-small" placeholder="Daten durchsuchen...">
+                                <select id="data-category-filter" class="select-input">
+                                    <option value="">Alle Kategorien</option>
+                                </select>
+                            </div>
+                            <div id="data-entries" class="data-entries"></div>
+                            <div id="data-pagination" class="pagination"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Statistics Tab -->
+                <section id="tab-stats" class="tab-content">
+                    <div class="stats-section">
+                        <div class="section-header">
+                            <h2>Statistiken</h2>
+                            <button class="btn btn-secondary" id="refresh-stats-btn">🔄 Aktualisieren</button>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">📊</div>
+                                <div class="stat-content">
+                                    <h3>Gesamte Einträge</h3>
+                                    <div class="stat-value" id="total-entries">-</div>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon">📂</div>
+                                <div class="stat-content">
+                                    <h3>Kategorien</h3>
+                                    <div class="stat-value" id="total-categories">-</div>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon">🏷️</div>
+                                <div class="stat-content">
+                                    <h3>Tags</h3>
+                                    <div class="stat-value" id="total-tags">-</div>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon">🕒</div>
+                                <div class="stat-content">
+                                    <h3>Letzte Aktualisierung</h3>
+                                    <div class="stat-value" id="last-updated">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="charts-section">
+                            <div class="chart-card">
+                                <h3>Kategorien-Verteilung</h3>
+                                <div id="category-chart" class="chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-info">
+                        <p>&copy; 2024 Srh - Intelligentes Such-Tool</p>
+                        <p>Version 1.0.0</p>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#" id="health-check">🏥 System-Status</a>
+                        <a href="KONZEPT.md" target="_blank">📋 Dokumentation</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Modal Container -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Modal</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Modal content will be inserted here -->
+            </div>
+            <div class="modal-footer" id="modal-footer">
+                <!-- Modal actions will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
