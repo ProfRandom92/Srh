@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SRH NFC-Kontrollpunkte – Prototyp</title>
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9h3BcgYRTOxb3rNItSeofniq9WeWs9es&v=weekly"
+    async defer
+  ></script>
+  <script>
+    function initMap() {
+      const campusCenter = { lat: 49.375, lng: 8.793 };
+      const map = new google.maps.Map(document.getElementById('map'), {
+        center: campusCenter,
+        zoom: 18,
+        mapTypeId: 'satellite',
+        tilt: 67,
+        heading: 0
+      });
+      const kontrollpunkte = [
+        { pos: { lat: 49.3755, lng: 8.7935 }, title: '18 – Tiefgarage Ozonanlage Haus 7' },
+        { pos: { lat: 49.3754, lng: 8.7934 }, title: '16 – Haus 7 – Notausgang Rückseite' },
+        { pos: { lat: 49.3753, lng: 8.7933 }, title: '15 – Zaun zum Bolzplatz' },
+        { pos: { lat: 49.3752, lng: 8.7932 }, title: '14 – Haus 8 – Notausgang Rückseite' },
+        { pos: { lat: 49.3751, lng: 8.7931 }, title: '13 – Haus 12 – Abteilung Bau & Technik – Notausgang' },
+        { pos: { lat: 49.3750, lng: 8.7930 }, title: '12 – Haus 11 – Notausgang Rückseite' },
+        { pos: { lat: 49.3749, lng: 8.7929 }, title: '11 – Hallenbad – Notausgang' },
+        { pos: { lat: 49.3748, lng: 8.7928 }, title: '10 – Haus 10 – Seiteneingang EG' },
+        { pos: { lat: 49.3747, lng: 8.7927 }, title: '4 – Haus 4 – Rückseite' },
+        { pos: { lat: 49.3746, lng: 8.7926 }, title: '6 – Terrasse – Rückseite Küche' },
+        { pos: { lat: 49.3745, lng: 8.7925 }, title: '5 – Kletterpark – am Mülleimer' },
+        { pos: { lat: 49.3744, lng: 8.7924 }, title: '10 – Tiefgarage Haus 21 – Eingang neben Briefkasten' },
+        { pos: { lat: 49.3743, lng: 8.7923 }, title: '1 – Anlage 536 Haus 20 – Heizzentrum letzte Tür' },
+        { pos: { lat: 49.3742, lng: 8.7922 }, title: '7 – Haus 22 – Seitenausgang Basketballplatz' },
+        { pos: { lat: 49.3741, lng: 8.7921 }, title: '2 – Kindertagesstätte Haus 23 – Eingang' },
+        { pos: { lat: 49.3740, lng: 8.7920 }, title: '9 – Haus 22 – 4. Tür neben der Automatiktür' },
+        { pos: { lat: 49.3739, lng: 8.7919 }, title: '8 – Eisensteg – Am Ende die letzte Tür (Brücke)' },
+        { pos: { lat: 49.3738, lng: 8.7918 }, title: '19 – Haus 1 – Niveau 4 Innenkontrolle' },
+        { pos: { lat: 49.3737, lng: 8.7917 }, title: '3 – Pforte Haus 1 – über dem Schieber' }
+      ];
+      kontrollpunkte.forEach(kp => {
+        new google.maps.Marker({
+          position: kp.pos,
+          map,
+          title: kp.title
+        });
+      });
+    }
+    window.initMap = initMap;
+  </script>
+</head>
+<body>
+  <div id="map"></div>
+</body>
+</html>
